@@ -2,7 +2,7 @@
 using RoleplayingMediaCore;
 using System.Numerics;
 
-namespace RoleplayingVoiceDalamud {
+namespace RoleplayingVoiceDalamudWrapper {
     public class MediaCameraObject : IMediaGameObject {
         private unsafe Camera* _camera;
 

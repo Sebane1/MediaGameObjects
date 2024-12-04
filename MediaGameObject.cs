@@ -4,7 +4,7 @@ using System;
 using System.Numerics;
 using IMediaGameObject = RoleplayingMediaCore.IMediaGameObject;
 
-namespace RoleplayingVoiceDalamud {
+namespace RoleplayingVoiceDalamudWrapper {
     public unsafe class MediaGameObject : IMediaGameObject {
         private Dalamud.Game.ClientState.Objects.Types.IGameObject _gameObject;
         private FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* _gameObjectPointer;

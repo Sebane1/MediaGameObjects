@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RoleplayingVoiceDalamud {
+namespace RoleplayingVoiceDalamudWrapper {
     internal class DummyObject : IMediaGameObject {
         public DummyObject() {
             Name = Guid.NewGuid().ToString();

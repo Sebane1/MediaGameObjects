@@ -1,6 +1,6 @@
 ﻿using Vector3 = System.Numerics.Vector3;
 
-namespace RoleplayingVoiceDalamud {
+namespace RoleplayingVoiceDalamudWrapper {
     public class MovingObject {
         Vector3 lastPosition;
         Vector3 lastRotation;
