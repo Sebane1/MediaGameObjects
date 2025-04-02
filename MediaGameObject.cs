@@ -10,6 +10,7 @@ namespace RoleplayingVoiceDalamudWrapper
     public unsafe class MediaGameObject : IMediaGameObject
     {
         private Dalamud.Game.ClientState.Objects.Types.IGameObject _gameObject;
+        private nint _address;
         private FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* _gameObjectPointer;
         private string _name = "";
         private Vector3 _position = new Vector3();
@@ -101,12 +102,13 @@ namespace RoleplayingVoiceDalamudWrapper
             }
         }
 
-        public Dalamud.Game.ClientState.Objects.Types.IGameObject GameObject { get => _gameObject; set => _gameObject = value; }
-
         bool IMediaGameObject.Invalid => false;
+
+        public nint Address { get => _address; set => _address = value; }
 
         public MediaGameObject(nint address)
         {
+            _address = address;
             _gameObjectPointer = (FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject*)address;
         }
         unsafe public MediaGameObject(FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* gameObject)
@@ -120,6 +122,7 @@ namespace RoleplayingVoiceDalamudWrapper
         }
         public MediaGameObject(nint address, string name, Vector3 position)
         {
+            _address = address;
             _gameObjectPointer = (FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject*)address;
             _name = name;
             _position = position;
