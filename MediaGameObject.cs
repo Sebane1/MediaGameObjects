@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Game.ClientState.Objects.Types;
-using InteropGenerator.Runtime;
+using DragAndDropTexturing.ThreadSafeDalamudObjectTable;
 using System;
 using System.Numerics;
 using IMediaGameObject = RoleplayingMediaCore.IMediaGameObject;
@@ -9,8 +8,7 @@ namespace RoleplayingVoiceDalamudWrapper
 {
     public unsafe class MediaGameObject : IMediaGameObject
     {
-        private Dalamud.Game.ClientState.Objects.Types.IGameObject _gameObject;
-        private FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* _gameObjectPointer;
+        ThreadSafeGameObject _threadSafeGameObject;
         private string _name = "";
         private Vector3 _position = new Vector3();
 
@@ -20,7 +18,7 @@ namespace RoleplayingVoiceDalamudWrapper
             {
                 try
                 {
-                    return _gameObjectPointer != null ? (_gameObjectPointer != null ? _gameObjectPointer->NameString : _name) : _name;
+                    return (_threadSafeGameObject != null ? _threadSafeGameObject.Name.TextValue : _name);
                 }
                 catch
                 {
@@ -35,7 +33,7 @@ namespace RoleplayingVoiceDalamudWrapper
             {
                 try
                 {
-                    return (_gameObjectPointer != null ? _gameObjectPointer->Position : _position);
+                    return (_threadSafeGameObject != null ? _threadSafeGameObject.Position : _position);
                 }
                 catch
                 {
@@ -50,7 +48,7 @@ namespace RoleplayingVoiceDalamudWrapper
             {
                 try
                 {
-                    return new Vector3(0, _gameObjectPointer != null ? _gameObjectPointer->Rotation : 0, 0);
+                    return new Vector3(0, _threadSafeGameObject != null ? _threadSafeGameObject.Rotation : 0, 0);
                 }
                 catch
                 {
@@ -59,36 +57,34 @@ namespace RoleplayingVoiceDalamudWrapper
             }
         }
 
-        // To do: re-implement target detection
-        //string IMediaGameObject.FocusedPlayerObject {
-        //    get {
-        //        if (_gameObject != null) {
-        //            try {
-        //                return _gameObject.TargetObject != null ?
-        //                    (_gameObject.TargetObject.ObjectKind == ObjectKind.Player ? _gameObject.TargetObject.Name.TextValue : "")
-        //                    : "";
-        //            } catch {
-        //                return "";
-        //            }
-        //        } else {
-        //            return "";
-        //        }
-        //    }
-        //}
-
         string IMediaGameObject.FocusedPlayerObject
         {
             get
             {
-                return "";
+                if (_threadSafeGameObject != null)
+                {
+                    try
+                    {
+                        return _threadSafeGameObject.TargetObject != null ?
+                            (_threadSafeGameObject.TargetObject.ObjectKind == ObjectKind.Player ? _threadSafeGameObject.TargetObject.Name.TextValue : "")
+                            : "";
+                    }
+                    catch
+                    {
+                        return "";
+                    }
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
-
         Vector3 IMediaGameObject.Forward
         {
             get
             {
-                float rotation = _gameObjectPointer != null ? _gameObjectPointer->Rotation : 0;
+                float rotation = _threadSafeGameObject != null ? _threadSafeGameObject.Rotation : 0;
                 return new Vector3((float)Math.Cos(rotation), 0, (float)Math.Sin(rotation));
             }
         }
@@ -101,26 +97,23 @@ namespace RoleplayingVoiceDalamudWrapper
             }
         }
 
-        public Dalamud.Game.ClientState.Objects.Types.IGameObject GameObject { get => _gameObject; set => _gameObject = value; }
+        public Dalamud.Game.ClientState.Objects.Types.IGameObject GameObject { get => _threadSafeGameObject; }
 
         bool IMediaGameObject.Invalid => false;
 
-        public MediaGameObject(nint address)
+        public MediaGameObject(ThreadSafeGameObject threadSafeGameObject)
         {
-            _gameObjectPointer = (FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject*)address;
+            _threadSafeGameObject = threadSafeGameObject;
         }
-        unsafe public MediaGameObject(FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* gameObject)
-        {
-            _gameObjectPointer = gameObject;
-        }
+
         public MediaGameObject(string name, Vector3 position)
         {
             _name = name;
             _position = position;
         }
-        public MediaGameObject(nint address, string name, Vector3 position)
+        public MediaGameObject(ThreadSafeGameObject threadSafeGameObject, string name, Vector3 position)
         {
-            _gameObjectPointer = (FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject*)address;
+            _threadSafeGameObject = threadSafeGameObject;
             _name = name;
             _position = position;
         }
