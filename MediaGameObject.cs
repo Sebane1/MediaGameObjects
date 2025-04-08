@@ -1,5 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Enums;
-using DragAndDropTexturing.ThreadSafeDalamudObjectTable;
+using GameObjectHelper.ThreadSafeDalamudObjectTable;
 using System;
 using System.Numerics;
 using IMediaGameObject = RoleplayingMediaCore.IMediaGameObject;
