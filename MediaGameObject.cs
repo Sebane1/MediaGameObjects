@@ -66,7 +66,7 @@ namespace RoleplayingVoiceDalamudWrapper
                     try
                     {
                         return _threadSafeGameObject.TargetObject != null ?
-                            (_threadSafeGameObject.TargetObject.ObjectKind == ObjectKind.Player ? _threadSafeGameObject.TargetObject.Name.TextValue : "")
+                            (_threadSafeGameObject.TargetObject.ObjectKind == ObjectKind.Pc ? _threadSafeGameObject.TargetObject.Name.TextValue : "")
                             : "";
                     }
                     catch
